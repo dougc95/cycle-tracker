@@ -1,25 +1,64 @@
+import { useState } from "react";
+
 const MenstrualCycle = () => {
-  const days = Array.from({ length: 28 }, (_, i) => i + 1);
+  const [cycleLength, setCycleLength] = useState(28);
+  const [startDate, setStartDate] = useState("");
+
+  // Generate days based on cycle length
+  const days = Array.from({ length: cycleLength }, (_, i) => i + 1);
 
   // Calculate positions for days around the circle
   const calculatePosition = (index) => {
-    const angle = (index * (360 / 28) - 90) * (Math.PI / 180);
+    const angle = (index * (360 / cycleLength) - 90) * (Math.PI / 180);
     const radius = 35; // Percentage from center
     const x = radius * Math.cos(angle);
     const y = radius * Math.sin(angle);
     return {
       left: `${50 + x}%`,
       top: `${50 + y}%`,
-      transform: `translate(-50%, -50%) rotate(${index * (360 / 28)}deg)`,
+      transform: `translate(-50%, -50%) rotate(${
+        index * (360 / cycleLength)
+      }deg)`,
     };
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#2e2e2e] p-8">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#2e2e2e] p-8">
       <div className="w-full max-w-2xl">
         <h1 className="mb-8 text-center text-3xl font-bold text-[#2f7059]">
           Ciclo Menstrual: Qué es y Fases
         </h1>
+
+        {/* Input fields for cycle length and start date */}
+        <div className="mb-6 flex flex-col items-center space-y-4">
+          <div>
+            <label htmlFor="cycleLength" className="block text-white">
+              Longitud del Ciclo (días):
+            </label>
+            <input
+              id="cycleLength"
+              type="number"
+              value={cycleLength}
+              onChange={(e) =>
+                setCycleLength(Math.max(1, Number(e.target.value)))
+              }
+              className="mt-1 w-24 rounded border border-gray-400 p-2 text-center"
+              min="1"
+            />
+          </div>
+          <div>
+            <label htmlFor="startDate" className="block text-white">
+              Fecha de Inicio del Sangrado:
+            </label>
+            <input
+              id="startDate"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="mt-1 w-48 rounded border border-gray-400 p-2"
+            />
+          </div>
+        </div>
 
         <div className="relative mx-auto aspect-square w-[320px]">
           {/* Outer circle with gradient border */}
