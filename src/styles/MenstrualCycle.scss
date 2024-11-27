@@ -1,0 +1,114 @@
+.menstrual-cycle {
+  text-align: center;
+  background-color: #2e2e2e; // Adjust background to match your example
+  padding: 2rem;
+  min-height: 100vh;
+  color: #2f7059;
+
+  .title {
+    font-family: "Arial, sans-serif";
+    font-size: 1.8rem;
+    color: #2f7059;
+    margin-bottom: 2rem;
+  }
+
+  .diagram {
+    position: relative;
+    width: 320px; // Adjust width for better proportions
+    height: 320px;
+    margin: 0 auto;
+
+    .outer-circle {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 70%, transparent 71%);
+      border: 6px solid #ccc;
+
+      .phase {
+        position: absolute;
+        font-size: 0.9rem;
+        font-family: "Arial, sans-serif";
+        text-align: center;
+
+        &.menstruation {
+          top: -10px; // Adjust positioning
+          left: 50%;
+          transform: translateX(-50%);
+          color: #d9534f;
+        }
+
+        &.follicular {
+          top: 15%;
+          right: 10%;
+          transform: translate(-50%, -50%);
+          color: #5bc0de;
+        }
+
+        &.ovulation {
+          bottom: -10px;
+          left: 50%;
+          transform: translateX(-50%);
+          color: #5cb85c;
+        }
+
+        &.luteal {
+          top: 15%;
+          left: 10%;
+          transform: translate(-50%, -50%);
+          color: #f0ad4e;
+        }
+      }
+    }
+
+    .inner-circle {
+      position: absolute;
+      width: 80%;
+      height: 80%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: #fff;
+
+      .day {
+        position: absolute;
+        font-size: 0.7rem;
+        font-family: "Arial, sans-serif";
+        color: #333;
+
+        // Position days dynamically using nth-child
+        &:nth-child(1) {
+          top: -5px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        &:nth-child(2) {
+          top: 10%;
+          left: 60%;
+          transform: translate(-50%, -50%) rotate(13deg);
+        }
+        &:nth-child(7) {
+          top: 50%;
+          right: 0;
+          transform: translate(50%, -50%);
+        }
+        &:nth-child(14) {
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        &:nth-child(21) {
+          top: 50%;
+          left: 0;
+          transform: translate(-50%, -50%);
+        }
+        &:nth-child(28) {
+          top: 10%;
+          left: 40%;
+        }
+      }
+    }
+  }
+}
