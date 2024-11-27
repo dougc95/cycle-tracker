@@ -1,8 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const MenstrualCycle = () => {
   const [cycleLength, setCycleLength] = useState(28);
-  const [startDate, setStartDate] = useState("");
+  const [startDate, setStartDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+  });
+  const [currentDayIndex, setCurrentDayIndex] = useState(null);
+
+  useEffect(() => {
+    if (startDate) {
+      const calculateCurrentDayIndex = () => {
+        const start = new Date(startDate);
+        const now = new Date();
+        const diffInDays =
+          Math.floor((now - start) / (1000 * 60 * 60 * 24)) % cycleLength;
+        return diffInDays >= 0 ? diffInDays : cycleLength + diffInDays;
+      };
+      setCurrentDayIndex(calculateCurrentDayIndex());
+    }
+  }, [startDate, cycleLength]);
 
   // Generate days based on cycle length
   const days = Array.from({ length: cycleLength }, (_, i) => i + 1);
@@ -17,7 +34,7 @@ const MenstrualCycle = () => {
       left: `${50 + x}%`,
       top: `${50 + y}%`,
       transform: `translate(-50%, -50%) rotate(${
-        index * (360 / cycleLength)
+        -index * (360 / cycleLength)
       }deg)`,
     };
   };
@@ -87,6 +104,22 @@ const MenstrualCycle = () => {
                 {day}
               </div>
             ))}
+
+            {/* Updated Clock hand */}
+            {currentDayIndex !== null && (
+              <div
+                className="absolute left-1/2 top-1/2"
+                style={{
+                  width: "2px",
+                  height: "50%",
+                  backgroundColor: "black",
+                  transform: `translateX(-50%) rotate(${
+                    -currentDayIndex * (360 / cycleLength) + 180
+                  }deg)`,
+                  transformOrigin: "0% 0%",
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
