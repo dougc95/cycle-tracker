@@ -24,6 +24,39 @@ const MenstrualCycle = () => {
   // Generate days based on cycle length
   const days = Array.from({ length: cycleLength }, (_, i) => i + 1);
 
+  // Calculate phase ranges dynamically
+  const calculatePhaseRanges = (length) => {
+    const menstrualEnd = Math.round(length * 0.18); // 18% for Menstrual phase
+    const ovulationLength = Math.max(2, Math.round(length * 0.1)); // 2–3 days (~7–10%)
+    const ovulationStart = Math.round(length * 0.47); // ~47% through the cycle
+    const ovulationEnd = ovulationStart + ovulationLength - 1; // 2-3 days for ovulation
+
+    const follicularEnd = ovulationStart - 1; // Ends right before ovulation starts
+    const lutealStart = ovulationEnd + 1; // Starts right after ovulation ends
+
+    return {
+      menstrual: [1, menstrualEnd],
+      follicular: [menstrualEnd + 1, follicularEnd],
+      ovulation: [ovulationStart, ovulationEnd],
+      luteal: [lutealStart, length],
+    };
+  };
+
+  const phaseRanges = calculatePhaseRanges(cycleLength);
+
+  // Determine the phase color for a given day
+  const getPhaseColor = (day) => {
+    if (day >= phaseRanges.menstrual[0] && day <= phaseRanges.menstrual[1])
+      return "text-red-500"; // Menstrual phase
+    if (day >= phaseRanges.follicular[0] && day <= phaseRanges.follicular[1])
+      return "text-blue-400"; // Follicular phase
+    if (day >= phaseRanges.ovulation[0] && day <= phaseRanges.ovulation[1])
+      return "text-green-500"; // Ovulation phase
+    if (day >= phaseRanges.luteal[0] && day <= phaseRanges.luteal[1])
+      return "text-yellow-500"; // Luteal phase
+    return "text-gray-700"; // Default
+  };
+
   // Calculate positions for days around the circle
   const calculatePosition = (index) => {
     const angle = (index * (360 / cycleLength) - 90) * (Math.PI / 180);
@@ -37,15 +70,6 @@ const MenstrualCycle = () => {
         -index * (360 / cycleLength)
       }deg)`,
     };
-  };
-
-  // Determine the phase based on the day
-  const getPhaseColor = (day) => {
-    const phaseLength = cycleLength / 4;
-    if (day <= phaseLength) return "text-red-500"; // Menstrual phase
-    if (day <= 2 * phaseLength) return "text-blue-400"; // Follicular phase
-    if (day <= 3 * phaseLength) return "text-green-500"; // Ovulation phase
-    return "text-yellow-500"; // Luteal phase
   };
 
   return (
@@ -66,10 +90,13 @@ const MenstrualCycle = () => {
               type="number"
               value={cycleLength}
               onChange={(e) =>
-                setCycleLength(Math.max(1, Number(e.target.value)))
+                setCycleLength(
+                  Math.max(25, Math.min(35, Number(e.target.value)))
+                )
               }
               className="mt-1 w-24 rounded border border-gray-400 p-2 text-center"
-              min="1"
+              min="25"
+              max="35"
             />
           </div>
           <div>
