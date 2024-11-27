@@ -39,6 +39,15 @@ const MenstrualCycle = () => {
     };
   };
 
+  // Determine the phase based on the day
+  const getPhaseColor = (day) => {
+    const phaseLength = cycleLength / 4;
+    if (day <= phaseLength) return "text-red-500"; // Menstrual phase
+    if (day <= 2 * phaseLength) return "text-blue-400"; // Follicular phase
+    if (day <= 3 * phaseLength) return "text-green-500"; // Ovulation phase
+    return "text-yellow-500"; // Luteal phase
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#2e2e2e] p-8">
       <div className="w-full max-w-2xl">
@@ -98,7 +107,7 @@ const MenstrualCycle = () => {
             {days.map((day, index) => (
               <div
                 key={day}
-                className="absolute text-sm text-gray-700"
+                className={`absolute text-sm ${getPhaseColor(day)}`}
                 style={calculatePosition(index)}
               >
                 {day}
