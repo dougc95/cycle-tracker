@@ -15,12 +15,9 @@ const MenstrualCycle = () => {
         const now = new Date();
         const diffInDays =
           Math.floor((now - start) / (1000 * 60 * 60 * 24)) % cycleLength;
-        // Reverse the direction for clockwise mapping
-        const clockwiseIndex =
-          (cycleLength - (diffInDays % cycleLength)) % cycleLength;
-        return clockwiseIndex >= 0
-          ? clockwiseIndex
-          : cycleLength + clockwiseIndex;
+        // Ensure the index is within the cycle length
+        const index = diffInDays % cycleLength;
+        return index >= 0 ? index : cycleLength + index;
       };
       setCurrentDayIndex(calculateCurrentDayIndex());
     }
