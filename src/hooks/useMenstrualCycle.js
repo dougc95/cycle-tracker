@@ -1,3 +1,4 @@
+// useMenstrualCycle.js
 import { useState, useEffect } from "react";
 
 const useMenstrualCycle = (startDate, cycleLength) => {
@@ -48,6 +49,19 @@ const useMenstrualCycle = (startDate, cycleLength) => {
     return { bg: isCurrentDay ? "#e5e7eb" : "#f3f4f6", text: "#1f2937" };
   };
 
+  // New function to get the current phase name
+  const getCurrentPhase = (day) => {
+    if (day >= phaseRanges.menstrual[0] && day <= phaseRanges.menstrual[1])
+      return "Menstrual";
+    if (day >= phaseRanges.follicular[0] && day <= phaseRanges.follicular[1])
+      return "Follicular";
+    if (day >= phaseRanges.ovulation[0] && day <= phaseRanges.ovulation[1])
+      return "Ovulation";
+    if (day >= phaseRanges.luteal[0] && day <= phaseRanges.luteal[1])
+      return "Luteal";
+    return "Unknown";
+  };
+
   const labels = [
     { text: "Menstruación", angle: -90, color: "#dc2626" },
     { text: "Fase Folicular", angle: 0, color: "#2563eb" },
@@ -55,7 +69,13 @@ const useMenstrualCycle = (startDate, cycleLength) => {
     { text: "Fase Lútea", angle: 180, color: "#ca8a04" },
   ];
 
-  return { currentDayIndex, days, getPhaseColor, labels, phaseRanges };
+  return {
+    currentDayIndex,
+    days,
+    getPhaseColor,
+    labels,
+    getCurrentPhase, // Include this in the returned object
+  };
 };
 
 export default useMenstrualCycle;

@@ -2,6 +2,7 @@ import { useState } from "react";
 import InputFields from "./InputFields";
 import PhasePreview from "./PhasePreview";
 import CycleChart from "./CycleChart";
+import PhaseDescription from "./PhaseDescription";
 import useMenstrualCycle from "../hooks/useMenstrualCycle";
 
 const MenstrualCycle = () => {
@@ -11,10 +12,11 @@ const MenstrualCycle = () => {
     return today.toISOString().split("T")[0];
   });
 
-  const { currentDayIndex, days, getPhaseColor, labels } = useMenstrualCycle(
-    startDate,
-    cycleLength
-  );
+  const { currentDayIndex, days, getPhaseColor, labels, getCurrentPhase } =
+    useMenstrualCycle(startDate, cycleLength);
+
+  const currentDay = currentDayIndex !== null ? currentDayIndex + 1 : null;
+  const currentPhase = currentDay ? getCurrentPhase(currentDay) : null;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#2e2e2e] p-8">
@@ -34,6 +36,8 @@ const MenstrualCycle = () => {
           currentDayIndex={currentDayIndex}
           getPhaseColor={getPhaseColor}
         />
+
+        <PhaseDescription currentPhase={currentPhase} />
 
         <CycleChart
           days={days}
