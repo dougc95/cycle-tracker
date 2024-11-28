@@ -61,10 +61,10 @@ const useMenstrualCycle = (startDate, cycleLength) => {
   };
 
   const labels = [
-    { text: "Menstruación", angle: -90, color: "#dc2626" },
-    { text: "Fase Folicular", angle: 0, color: "#2563eb" },
-    { text: "Ovulación", angle: 90, color: "#16a34a" },
-    { text: "Fase Lútea", angle: 180, color: "#ca8a04" },
+    { text: "Menstrual ", angle: -90, color: "#dc2626" },
+    { text: "Follicular ", angle: 0, color: "#2563eb" },
+    { text: "Ovulation", angle: 90, color: "#16a34a" },
+    { text: "Luteal ", angle: 180, color: "#ca8a04" },
   ];
 
   const getPregnancyProbability = (day) => {
