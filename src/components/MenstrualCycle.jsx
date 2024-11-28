@@ -83,8 +83,10 @@ const MenstrualCycle = () => {
     const anglePerDay = 360 / cycleLength;
 
     return days.map((day, index) => {
-      const startAngle = index * anglePerDay - 90;
-      const endAngle = (index + 1) * anglePerDay - 90;
+      // Adjusted to center the wedge around the day number
+      const centerAngle = index * anglePerDay - 90;
+      const startAngle = centerAngle - anglePerDay / 2;
+      const endAngle = centerAngle + anglePerDay / 2;
 
       const x1 = center + radius * Math.cos((Math.PI * startAngle) / 180);
       const y1 = center + radius * Math.sin((Math.PI * startAngle) / 180);
@@ -95,10 +97,12 @@ const MenstrualCycle = () => {
       const isCurrentDay = index === currentDayIndex;
       const colors = getPhaseColor(day, isCurrentDay);
 
+      const largeArcFlag = anglePerDay >= 180 ? 1 : 0;
+
       const d = `
         M ${center} ${center}
         L ${x1} ${y1}
-        A ${radius} ${radius} 0 0 1 ${x2} ${y2}
+        A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}
         Z
       `;
 
@@ -115,9 +119,11 @@ const MenstrualCycle = () => {
   };
 
   const generateDayNumbers = () => {
-    const radius = 35;
+    const radius = 38; // Increased from 35 to 38 to move numbers outward
+    const anglePerDay = 360 / cycleLength;
+
     return days.map((day, index) => {
-      const angle = (index * (360 / cycleLength) - 90) * (Math.PI / 180);
+      const angle = (index * anglePerDay - 90) * (Math.PI / 180);
       const x = 50 + radius * Math.cos(angle);
       const y = 50 + radius * Math.sin(angle);
 
@@ -149,7 +155,7 @@ const MenstrualCycle = () => {
       { text: "Fase Lútea", angle: 180, color: "#ca8a04" },
     ];
 
-    const radius = 60;
+    const radius = 70; // Increased from 60 to 70 to ensure labels are visible
 
     return labels.map((label, index) => {
       const angle = label.angle * (Math.PI / 180);
@@ -162,7 +168,7 @@ const MenstrualCycle = () => {
           x={x}
           y={y}
           fill={label.color}
-          fontSize="3.5"
+          fontSize="4" // Increased font size for better visibility
           fontWeight="bold"
           textAnchor="middle"
           alignmentBaseline="middle"
@@ -179,8 +185,8 @@ const MenstrualCycle = () => {
     const angle = currentDayIndex * (360 / cycleLength) - 90;
     const x1 = 50;
     const y1 = 50;
-    const x2 = 50 + 45 * Math.cos((Math.PI * angle) / 180);
-    const y2 = 50 + 45 * Math.sin((Math.PI * angle) / 180);
+    const x2 = 50 + 35 * Math.cos((Math.PI * angle) / 180); // Reduced length from 45 to 35
+    const y2 = 50 + 35 * Math.sin((Math.PI * angle) / 180);
 
     return (
       <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="black" strokeWidth="1" />
@@ -248,7 +254,10 @@ const MenstrualCycle = () => {
         {generatePhasePreview()}
 
         <div className="mx-auto aspect-square w-[320px]">
-          <svg className="h-full w-full" viewBox="0 0 100 100">
+          <svg
+            className="h-full w-full overflow-visible"
+            viewBox="-20 -20 140 140"
+          >
             <circle
               cx="50"
               cy="50"
