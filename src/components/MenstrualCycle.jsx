@@ -77,59 +77,114 @@ const MenstrualCycle = () => {
     };
   };
 
-  // Calculate positions for days around the circle
-  const calculatePosition = (index) => {
-    // Changed to clockwise rotation
-    const angle = (index * (360 / cycleLength) - 90) * (Math.PI / 180);
-    const radius = 35; // Percentage from center
-    const x = radius * Math.cos(angle);
-    const y = radius * Math.sin(angle);
-    return {
-      left: `${50 + x}%`,
-      top: `${50 + y}%`,
-      transform: `translate(-50%, -50%) rotate(${
-        -index * (360 / cycleLength)
-      }deg)`,
-    };
-  };
-
   const generateWedges = () => {
-    const radius = 45;
+    const radius = 50;
+    const center = 50;
     const anglePerDay = 360 / cycleLength;
 
     return days.map((day, index) => {
-      // Angles are already adjusted for clockwise
-      const startAngle = (index * anglePerDay - 90) * (Math.PI / 180);
-      const endAngle = ((index + 1) * anglePerDay - 90) * (Math.PI / 180);
+      const startAngle = index * anglePerDay - 90;
+      const endAngle = (index + 1) * anglePerDay - 90;
 
-      const x1 = 50 + radius * Math.cos(startAngle);
-      const y1 = 50 + radius * Math.sin(startAngle);
-      const x2 = 50 + radius * Math.cos(endAngle);
-      const y2 = 50 + radius * Math.sin(endAngle);
+      const x1 = center + radius * Math.cos((Math.PI * startAngle) / 180);
+      const y1 = center + radius * Math.sin((Math.PI * startAngle) / 180);
 
-      const largeArcFlag = anglePerDay > 180 ? 1 : 0;
+      const x2 = center + radius * Math.cos((Math.PI * endAngle) / 180);
+      const y2 = center + radius * Math.sin((Math.PI * endAngle) / 180);
+
+      const isCurrentDay = index === currentDayIndex;
+      const colors = getPhaseColor(day, isCurrentDay);
 
       const d = `
-        M 50 50
+        M ${center} ${center}
         L ${x1} ${y1}
-        A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}
+        A ${radius} ${radius} 0 0 1 ${x2} ${y2}
         Z
       `;
+
+      return (
+        <path
+          key={`wedge-${day}`}
+          d={d}
+          fill={colors.bg}
+          stroke="#ffffff"
+          strokeWidth="0.5"
+        />
+      );
+    });
+  };
+
+  const generateDayNumbers = () => {
+    const radius = 35;
+    return days.map((day, index) => {
+      const angle = (index * (360 / cycleLength) - 90) * (Math.PI / 180);
+      const x = 50 + radius * Math.cos(angle);
+      const y = 50 + radius * Math.sin(angle);
 
       const isCurrentDay = index === currentDayIndex;
       const colors = getPhaseColor(day, isCurrentDay);
 
       return (
-        <path
-          data-testid="svg-wedge"
-          key={`wedge-${day}`}
-          d={d}
-          fill={colors.bg}
-          stroke="#ffffff"
-          strokeWidth="1"
-        />
+        <text
+          key={`day-${day}`}
+          x={x}
+          y={y}
+          fill={colors.text}
+          fontSize="4"
+          fontWeight="bold"
+          textAnchor="middle"
+          alignmentBaseline="middle"
+        >
+          {day}
+        </text>
       );
     });
+  };
+
+  const generatePhaseLabels = () => {
+    const labels = [
+      { text: "Menstruación", angle: -90, color: "#dc2626" },
+      { text: "Fase Folicular", angle: 0, color: "#2563eb" },
+      { text: "Ovulación", angle: 90, color: "#16a34a" },
+      { text: "Fase Lútea", angle: 180, color: "#ca8a04" },
+    ];
+
+    const radius = 60;
+
+    return labels.map((label, index) => {
+      const angle = label.angle * (Math.PI / 180);
+      const x = 50 + radius * Math.cos(angle);
+      const y = 50 + radius * Math.sin(angle);
+
+      return (
+        <text
+          key={`label-${index}`}
+          x={x}
+          y={y}
+          fill={label.color}
+          fontSize="3.5"
+          fontWeight="bold"
+          textAnchor="middle"
+          alignmentBaseline="middle"
+        >
+          {label.text}
+        </text>
+      );
+    });
+  };
+
+  const generateClockHand = () => {
+    if (currentDayIndex === null) return null;
+
+    const angle = currentDayIndex * (360 / cycleLength) - 90;
+    const x1 = 50;
+    const y1 = 50;
+    const x2 = 50 + 45 * Math.cos((Math.PI * angle) / 180);
+    const y2 = 50 + 45 * Math.sin((Math.PI * angle) / 180);
+
+    return (
+      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="black" strokeWidth="1" />
+    );
   };
 
   const generatePhasePreview = () => {
@@ -139,7 +194,7 @@ const MenstrualCycle = () => {
     const colors = getPhaseColor(currentDay, true);
 
     return (
-      <div className="absolute left-4 top-4 flex items-center space-x-2">
+      <div className="mb-4 flex items-center space-x-2">
         <div
           className="h-4 w-4 rounded-full border border-gray-300"
           style={{ backgroundColor: colors.bg }}
@@ -190,54 +245,23 @@ const MenstrualCycle = () => {
           </div>
         </div>
 
-        <div className="relative mx-auto aspect-square w-[320px]">
-          {generatePhasePreview()}
-          <div className="absolute h-full w-full rounded-full border-4 border-gray-300 bg-white">
-            <svg className="absolute h-full w-full">{generateWedges()}</svg>
+        {generatePhasePreview()}
 
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-red-500">
-              Menstruación
-            </div>
-            <div className="absolute right-0 top-1/4 translate-x-1/2 -rotate-45 text-blue-400">
-              Fase Folicular
-            </div>
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-8 text-green-500">
-              Ovulación
-            </div>
-            <div className="absolute left-0 top-1/4 -translate-x-1/2 rotate-45 text-yellow-500">
-              Fase Lútea
-            </div>
-
-            {/* Day numbers */}
-            {days.map((day, index) => (
-              <div
-                key={day}
-                className="absolute text-sm font-bold"
-                style={{
-                  ...calculatePosition(index),
-                  color: getPhaseColor(day, index === currentDayIndex).text,
-                }}
-              >
-                {day}
-              </div>
-            ))}
-
-            {/* Updated Clock hand */}
-            {currentDayIndex !== null && (
-              <div
-                className="absolute left-1/2 top-1/2"
-                style={{
-                  width: "2px",
-                  height: "50%",
-                  backgroundColor: "black",
-                  transform: `translateX(-50%) rotate(${
-                    currentDayIndex * (360 / cycleLength) + 180
-                  }deg)`,
-                  transformOrigin: "0% 0%",
-                }}
-              />
-            )}
-          </div>
+        <div className="mx-auto aspect-square w-[320px]">
+          <svg className="h-full w-full" viewBox="0 0 100 100">
+            <circle
+              cx="50"
+              cy="50"
+              r="49"
+              fill="white"
+              stroke="gray"
+              strokeWidth="1"
+            />
+            {generateWedges()}
+            {generateDayNumbers()}
+            {generatePhaseLabels()}
+            {generateClockHand()}
+          </svg>
         </div>
       </div>
     </div>
