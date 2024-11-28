@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 
 const PhasePreview = ({ currentDayIndex, getPhaseColor }) => {
   if (currentDayIndex === null) return null;
@@ -15,6 +15,11 @@ const PhasePreview = ({ currentDayIndex, getPhaseColor }) => {
       <span className="text-white text-sm">Day {currentDay}</span>
     </div>
   );
+};
+
+PhasePreview.propTypes = {
+  currentDayIndex: PropTypes.number,
+  getPhaseColor: PropTypes.func.isRequired,
 };
 
 export default PhasePreview;

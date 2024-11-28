@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 
 const CycleChart = ({
   days,
@@ -133,6 +133,20 @@ const CycleChart = ({
       </svg>
     </div>
   );
+};
+
+CycleChart.propTypes = {
+  days: PropTypes.arrayOf(PropTypes.number).isRequired,
+  currentDayIndex: PropTypes.number,
+  getPhaseColor: PropTypes.func.isRequired,
+  labels: PropTypes.arrayOf(
+    PropTypes.shape({
+      text: PropTypes.string.isRequired,
+      angle: PropTypes.number.isRequired,
+      color: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  cycleLength: PropTypes.number.isRequired,
 };
 
 export default CycleChart;

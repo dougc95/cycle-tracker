@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 
 const InputFields = ({
   cycleLength,
@@ -37,5 +37,12 @@ const InputFields = ({
     </div>
   </div>
 );
+
+InputFields.propTypes = {
+  cycleLength: PropTypes.number.isRequired,
+  setCycleLength: PropTypes.func.isRequired,
+  startDate: PropTypes.string.isRequired,
+  setStartDate: PropTypes.func.isRequired,
+};
 
 export default InputFields;
