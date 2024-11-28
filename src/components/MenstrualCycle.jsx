@@ -15,7 +15,12 @@ const MenstrualCycle = () => {
         const now = new Date();
         const diffInDays =
           Math.floor((now - start) / (1000 * 60 * 60 * 24)) % cycleLength;
-        return diffInDays >= 0 ? diffInDays : cycleLength + diffInDays;
+        // Reverse the direction for clockwise mapping
+        const clockwiseIndex =
+          (cycleLength - (diffInDays % cycleLength)) % cycleLength;
+        return clockwiseIndex >= 0
+          ? clockwiseIndex
+          : cycleLength + clockwiseIndex;
       };
       setCurrentDayIndex(calculateCurrentDayIndex());
     }
@@ -93,9 +98,9 @@ const MenstrualCycle = () => {
     const anglePerDay = 360 / cycleLength;
 
     return days.map((day, index) => {
-      // Changed to clockwise rotation
-      const startAngle = (-index * anglePerDay + 90) * (Math.PI / 180);
-      const endAngle = (-(index + 1) * anglePerDay + 90) * (Math.PI / 180);
+      // Angles are already adjusted for clockwise
+      const startAngle = (index * anglePerDay - 90) * (Math.PI / 180);
+      const endAngle = ((index + 1) * anglePerDay - 90) * (Math.PI / 180);
 
       const x1 = 50 + radius * Math.cos(startAngle);
       const y1 = 50 + radius * Math.sin(startAngle);
@@ -226,7 +231,7 @@ const MenstrualCycle = () => {
                   height: "50%",
                   backgroundColor: "black",
                   transform: `translateX(-50%) rotate(${
-                    -currentDayIndex * (360 / cycleLength) + 180
+                    currentDayIndex * (360 / cycleLength) + 180
                   }deg)`,
                   transformOrigin: "0% 0%",
                 }}
