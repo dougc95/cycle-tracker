@@ -45,20 +45,36 @@ const MenstrualCycle = () => {
   const phaseRanges = calculatePhaseRanges(cycleLength);
 
   // Determine the phase color for a given day
-  const getPhaseColor = (day) => {
+  const getPhaseColor = (day, isCurrentDay = false) => {
     if (day >= phaseRanges.menstrual[0] && day <= phaseRanges.menstrual[1])
-      return "text-red-500"; // Menstrual phase
+      return {
+        bg: isCurrentDay ? "#fecaca" : "#fee2e2",
+        text: "#991b1b",
+      };
     if (day >= phaseRanges.follicular[0] && day <= phaseRanges.follicular[1])
-      return "text-blue-400"; // Follicular phase
+      return {
+        bg: isCurrentDay ? "#bfdbfe" : "#dbeafe",
+        text: "#1e40af",
+      };
     if (day >= phaseRanges.ovulation[0] && day <= phaseRanges.ovulation[1])
-      return "text-green-500"; // Ovulation phase
+      return {
+        bg: isCurrentDay ? "#bbf7d0" : "#dcfce7",
+        text: "#166534",
+      };
     if (day >= phaseRanges.luteal[0] && day <= phaseRanges.luteal[1])
-      return "text-yellow-500"; // Luteal phase
-    return "text-gray-700"; // Default
+      return {
+        bg: isCurrentDay ? "#fef08a" : "#fef9c3",
+        text: "#854d0e",
+      };
+    return {
+      bg: isCurrentDay ? "#e5e7eb" : "#f3f4f6",
+      text: "#1f2937",
+    };
   };
 
   // Calculate positions for days around the circle
   const calculatePosition = (index) => {
+    // Changed to clockwise rotation
     const angle = (index * (360 / cycleLength) - 90) * (Math.PI / 180);
     const radius = 35; // Percentage from center
     const x = radius * Math.cos(angle);
@@ -72,18 +88,74 @@ const MenstrualCycle = () => {
     };
   };
 
+  const generateWedges = () => {
+    const radius = 45;
+    const anglePerDay = 360 / cycleLength;
+
+    return days.map((day, index) => {
+      // Changed to clockwise rotation
+      const startAngle = (-index * anglePerDay + 90) * (Math.PI / 180);
+      const endAngle = (-(index + 1) * anglePerDay + 90) * (Math.PI / 180);
+
+      const x1 = 50 + radius * Math.cos(startAngle);
+      const y1 = 50 + radius * Math.sin(startAngle);
+      const x2 = 50 + radius * Math.cos(endAngle);
+      const y2 = 50 + radius * Math.sin(endAngle);
+
+      const largeArcFlag = anglePerDay > 180 ? 1 : 0;
+
+      const d = `
+        M 50 50
+        L ${x1} ${y1}
+        A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}
+        Z
+      `;
+
+      const isCurrentDay = index === currentDayIndex;
+      const colors = getPhaseColor(day, isCurrentDay);
+
+      return (
+        <path
+          data-testid="svg-wedge"
+          key={`wedge-${day}`}
+          d={d}
+          fill={colors.bg}
+          stroke="#ffffff"
+          strokeWidth="1"
+        />
+      );
+    });
+  };
+
+  const generatePhasePreview = () => {
+    if (currentDayIndex === null) return null;
+
+    const currentDay = currentDayIndex + 1;
+    const colors = getPhaseColor(currentDay, true);
+
+    return (
+      <div className="absolute left-4 top-4 flex items-center space-x-2">
+        <div
+          className="h-4 w-4 rounded-full border border-gray-300"
+          style={{ backgroundColor: colors.bg }}
+        />
+        <span className="text-white text-sm">Day {currentDay}</span>
+      </div>
+    );
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#2e2e2e] p-8">
       <div className="w-full max-w-2xl">
         <h1 className="mb-8 text-center text-3xl font-bold text-[#2f7059]">
-          Ciclo Menstrual: Qué es y Fases
+          Couples Cycle Tracker
         </h1>
 
         {/* Input fields for cycle length and start date */}
         <div className="mb-6 flex flex-col items-center space-y-4">
           <div>
             <label htmlFor="cycleLength" className="block text-white">
-              Longitud del Ciclo (días):
+              Cycle Length (days):
             </label>
             <input
               id="cycleLength"
@@ -101,7 +173,7 @@ const MenstrualCycle = () => {
           </div>
           <div>
             <label htmlFor="startDate" className="block text-white">
-              Fecha de Inicio del Sangrado:
+              Start Date of Bleeding
             </label>
             <input
               id="startDate"
@@ -114,9 +186,10 @@ const MenstrualCycle = () => {
         </div>
 
         <div className="relative mx-auto aspect-square w-[320px]">
-          {/* Outer circle with gradient border */}
+          {generatePhasePreview()}
           <div className="absolute h-full w-full rounded-full border-4 border-gray-300 bg-white">
-            {/* Phase labels */}
+            <svg className="absolute h-full w-full">{generateWedges()}</svg>
+
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-red-500">
               Menstruación
             </div>
@@ -134,8 +207,11 @@ const MenstrualCycle = () => {
             {days.map((day, index) => (
               <div
                 key={day}
-                className={`absolute text-sm ${getPhaseColor(day)}`}
-                style={calculatePosition(index)}
+                className="absolute text-sm font-bold"
+                style={{
+                  ...calculatePosition(index),
+                  color: getPhaseColor(day, index === currentDayIndex).text,
+                }}
               >
                 {day}
               </div>
