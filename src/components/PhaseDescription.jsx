@@ -1,4 +1,3 @@
-// PhaseDescription.js
 import PropTypes from "prop-types";
 
 const phaseDescriptions = {

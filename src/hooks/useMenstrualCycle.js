@@ -1,4 +1,3 @@
-// useMenstrualCycle.js
 import { useState, useEffect } from "react";
 
 const useMenstrualCycle = (startDate, cycleLength) => {
@@ -49,7 +48,6 @@ const useMenstrualCycle = (startDate, cycleLength) => {
     return { bg: isCurrentDay ? "#e5e7eb" : "#f3f4f6", text: "#1f2937" };
   };
 
-  // New function to get the current phase name
   const getCurrentPhase = (day) => {
     if (day >= phaseRanges.menstrual[0] && day <= phaseRanges.menstrual[1])
       return "Menstrual";
@@ -69,12 +67,27 @@ const useMenstrualCycle = (startDate, cycleLength) => {
     { text: "Fase Lútea", angle: 180, color: "#ca8a04" },
   ];
 
+  const getPregnancyProbability = (day) => {
+    const ovulationDay = Math.round(cycleLength * 0.47);
+    const fertileWindowStart = ovulationDay - 5;
+    const fertileWindowEnd = ovulationDay + 1;
+
+    if (day >= fertileWindowStart && day <= fertileWindowEnd) {
+      return "High";
+    } else if (day === fertileWindowStart - 1 || day === fertileWindowEnd + 1) {
+      return "Moderate";
+    } else {
+      return "Low";
+    }
+  };
+
   return {
     currentDayIndex,
     days,
     getPhaseColor,
     labels,
-    getCurrentPhase, // Include this in the returned object
+    getCurrentPhase,
+    getPregnancyProbability,
   };
 };
 

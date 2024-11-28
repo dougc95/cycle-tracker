@@ -12,8 +12,14 @@ const MenstrualCycle = () => {
     return today.toISOString().split("T")[0];
   });
 
-  const { currentDayIndex, days, getPhaseColor, labels, getCurrentPhase } =
-    useMenstrualCycle(startDate, cycleLength);
+  const {
+    currentDayIndex,
+    days,
+    getPhaseColor,
+    labels,
+    getCurrentPhase,
+    getPregnancyProbability,
+  } = useMenstrualCycle(startDate, cycleLength);
 
   const currentDay = currentDayIndex !== null ? currentDayIndex + 1 : null;
   const currentPhase = currentDay ? getCurrentPhase(currentDay) : null;
@@ -35,6 +41,7 @@ const MenstrualCycle = () => {
         <PhasePreview
           currentDayIndex={currentDayIndex}
           getPhaseColor={getPhaseColor}
+          getPregnancyProbability={getPregnancyProbability}
         />
 
         <PhaseDescription currentPhase={currentPhase} />
@@ -46,6 +53,13 @@ const MenstrualCycle = () => {
           labels={labels}
           cycleLength={cycleLength}
         />
+
+        {/* Disclaimer */}
+        <p className="mt-4 text-center text-xs text-gray-400">
+          Note: The pregnancy probability is an estimation and should not be
+          used for medical advice or contraception. Please consult a healthcare
+          professional for personalized information.
+        </p>
       </div>
     </div>
   );
