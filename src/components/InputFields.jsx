@@ -6,7 +6,7 @@ const InputFields = ({
   startDate,
   setStartDate,
 }) => (
-  <div className="mb-6 flex flex-col items-center space-y-4">
+  <div className="mb-6 flex flex-col space-y-4">
     <div>
       <label htmlFor="cycleLength" className="block text-white">
         Cycle Length (days):
