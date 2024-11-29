@@ -1,19 +1,16 @@
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 
 const useMenstrualCycle = (startDate, cycleLength) => {
-  const [currentDayIndex, setCurrentDayIndex] = useState(null);
+  const currentDayIndex = useMemo(() => {
+    const calculateCurrentDayIndex = () => {
+      const start = new Date(startDate);
+      const now = new Date();
+      const diffInDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+      const index = diffInDays % cycleLength;
+      return index >= 0 ? index : cycleLength + index;
+    };
 
-  useEffect(() => {
-    if (startDate) {
-      const calculateCurrentDayIndex = () => {
-        const start = new Date(startDate);
-        const now = new Date();
-        const diffInDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-        const index = diffInDays % cycleLength;
-        return index >= 0 ? index : cycleLength + index;
-      };
-      setCurrentDayIndex(calculateCurrentDayIndex());
-    }
+    return startDate ? calculateCurrentDayIndex() : null;
   }, [startDate, cycleLength]);
 
   const days = Array.from({ length: cycleLength }, (_, i) => i + 1);
