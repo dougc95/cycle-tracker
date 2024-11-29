@@ -31,12 +31,21 @@ const MenstrualCycle = () => {
           Couples Cycle Tracker
         </h1>
 
-        <InputFields
-          cycleLength={cycleLength}
-          setCycleLength={setCycleLength}
-          startDate={startDate}
-          setStartDate={setStartDate}
-        />
+        <div className="flex">
+          <InputFields
+            cycleLength={cycleLength}
+            setCycleLength={setCycleLength}
+            startDate={startDate}
+            setStartDate={setStartDate}
+          />
+          <CycleChart
+            days={days}
+            currentDayIndex={currentDayIndex}
+            getPhaseColor={getPhaseColor}
+            labels={labels}
+            cycleLength={cycleLength}
+          />
+        </div>
 
         <PhasePreview
           currentDayIndex={currentDayIndex}
@@ -45,22 +54,15 @@ const MenstrualCycle = () => {
         />
 
         <PhaseDescription currentPhase={currentPhase} />
-
-        <CycleChart
-          days={days}
-          currentDayIndex={currentDayIndex}
-          getPhaseColor={getPhaseColor}
-          labels={labels}
-          cycleLength={cycleLength}
-        />
-
+      </div>
+      <footer>
         {/* Disclaimer */}
         <p className="mt-4 text-center text-xs text-gray-400">
           Note: The pregnancy probability is an estimation and should not be
           used for medical advice or contraception. Please consult a healthcare
           professional for personalized information.
         </p>
-      </div>
+      </footer>
     </div>
   );
 };
