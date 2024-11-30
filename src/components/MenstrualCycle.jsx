@@ -1,10 +1,12 @@
 import { useState } from "react";
+import CycleChart from "./CycleChart";
+import FAQ from "./FAQ/FAQ";
+import Feedback from "./Feedback";
 import InputFields from "./InputFields";
 import PhasePreview from "./PhasePreview";
-import CycleChart from "./CycleChart";
 import PhaseDescription from "./PhaseDescription";
 import SeedCyclingTab from "./SeedCyclingTab";
-import Feedback from "./Feedback";
+
 import useMenstrualCycle from "../hooks/useMenstrualCycle";
 
 const MenstrualCycle = () => {
@@ -28,6 +30,8 @@ const MenstrualCycle = () => {
   const currentDay = currentDayIndex !== null ? currentDayIndex + 1 : null;
   const currentPhase = currentDay ? getCurrentPhase(currentDay) : null;
 
+  const tabs = ["Home", "SeedCycling", "FAQ", "Feedback"];
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#2e2e2e] p-8">
       <div className="w-full max-w-2xl">
@@ -36,8 +40,8 @@ const MenstrualCycle = () => {
         </h1>
 
         {/* Tab Navigation */}
-        <div className="flex justify-center mb-6">
-          {["Home", "SeedCycling", "Feedback"].map((tab) => (
+        <div className="flex justify-center mb-6 flex-wrap">
+          {tabs.map((tab) => (
             <button
               key={tab}
               className={`px-4 py-2 mx-2 rounded ${
@@ -92,6 +96,7 @@ const MenstrualCycle = () => {
           </>
         )}
         {activeTab === "SeedCycling" && <SeedCyclingTab />}
+        {activeTab === "FAQ" && <FAQ />}
         {activeTab === "Feedback" && <Feedback />}
       </div>
     </div>
