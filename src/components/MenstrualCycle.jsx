@@ -34,18 +34,23 @@ const MenstrualCycle = () => {
           Couples Cycle Tracker
         </h1>
 
+        {/* Tab Navigation */}
         <div className="flex justify-center mb-6">
           <button
-            className={`px-4 py-2 mx-2 ${
-              activeTab === "Home" ? "text-[#2f7059]" : "text-white"
+            className={`px-4 py-2 mx-2 rounded ${
+              activeTab === "Home"
+                ? "text-white font-semibold border-b-2 border-white"
+                : "text-[#2f7059] opacity-75"
             }`}
             onClick={() => setActiveTab("Home")}
           >
             Home
           </button>
           <button
-            className={`px-4 py-2 mx-2 ${
-              activeTab === "SeedCycling" ? "text-[#2f7059]" : "text-white"
+            className={`px-4 py-2 mx-2 rounded ${
+              activeTab === "SeedCycling"
+                ? "text-white font-semibold border-b-2 border-white"
+                : "text-[#2f7059] opacity-75"
             }`}
             onClick={() => setActiveTab("SeedCycling")}
           >
@@ -55,7 +60,7 @@ const MenstrualCycle = () => {
 
         {activeTab === "Home" ? (
           <>
-            <div className="flex">
+            <div className="flex flex-col md:flex-row">
               <InputFields
                 cycleLength={cycleLength}
                 setCycleLength={setCycleLength}
