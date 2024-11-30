@@ -10,6 +10,7 @@ const phaseDescriptions = {
       "Relief from PMS: Some may experience a sense of relief as premenstrual symptoms diminish with the onset of menstruation.",
       "Reflection and Introspection: This phase can bring about a period of self-reflection and emotional processing.",
     ],
+    seedRecommendations: [], // No seeds during Menstrual phase
   },
   Follicular: {
     title: "Follicular Phase",
@@ -21,6 +22,7 @@ const phaseDescriptions = {
       "Social Engagement: A heightened desire for social interaction, networking, and collaboration.",
       "Bravery and Adventurousness: Women may feel more open to taking risks or trying new experiences.",
     ],
+    seedRecommendations: ["Flaxseeds (🌾)", "Pumpkin Seeds (🎃)"],
   },
   Ovulation: {
     title: "Ovulation Phase",
@@ -33,6 +35,7 @@ const phaseDescriptions = {
       "Emotional Sensitivity: Enhanced ability to read social cues and empathize with others.",
       "Creativity and Problem-Solving: Peak cognitive abilities can lead to innovative thinking.",
     ],
+    seedRecommendations: ["Flaxseeds (🌾)", "Pumpkin Seeds (🎃)"],
   },
   Luteal: {
     title: "Luteal Phase",
@@ -48,31 +51,46 @@ const phaseDescriptions = {
       "Sensitivity to Stress: Everyday stressors may feel more overwhelming during this phase.",
       "Physical Discomfort Influencing Mood: Symptoms like bloating, breast tenderness, or headaches can contribute to irritability or low mood.",
     ],
+    seedRecommendations: ["Sesame Seeds (🌿)", "Sunflower Seeds (🌻)"],
   },
 };
 
 const PhaseDescription = ({ currentPhase }) => {
   if (!currentPhase || !phaseDescriptions[currentPhase]) return null;
 
-  const { title, hormonalChanges, psychologicalEffects } =
+  const { title, hormonalChanges, psychologicalEffects, seedRecommendations } =
     phaseDescriptions[currentPhase];
 
   return (
     <div className="text-white mt-6">
-      <h2 className="text-2xl font-bold mb-2">{title}</h2>
-      <p className="mb-2">
+      <h2 className="text-2xl font-bold mb-4 font-playfair">{title}</h2>
+      <p className="mb-3 text-base font-open-sans">
         <strong>Hormonal Changes:</strong> {hormonalChanges}
       </p>
-      <p>
-        <strong>Psychological Effects:</strong>
+      <p className="mb-2 text-lg font-semibold font-open-sans">
+        Psychological Effects:
       </p>
-      <ul className="list-disc list-inside">
+      <ul className="list-disc list-inside mb-4 text-base font-open-sans">
         {psychologicalEffects.map((effect, index) => (
           <li key={index} className="mb-1">
             {effect}
           </li>
         ))}
       </ul>
+      {seedRecommendations && seedRecommendations.length > 0 && (
+        <>
+          <p className="mb-2 text-lg font-semibold font-open-sans">
+            Seed Recommendations:
+          </p>
+          <ul className="list-disc list-inside text-base font-open-sans">
+            {seedRecommendations.map((seed, index) => (
+              <li key={index} className="mb-1">
+                {seed}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 };

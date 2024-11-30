@@ -6,6 +6,8 @@ const CycleChart = ({
   getPhaseColor,
   labels,
   cycleLength,
+  getCurrentPhase,
+  seedRecommendations,
 }) => {
   const generateWedges = () => {
     const radius = 50;
@@ -115,20 +117,45 @@ const CycleChart = ({
     );
   };
 
+  const generateSeedIcons = () => {
+    const radius = 60; // Slightly larger radius to place icons outside the wedges
+    const anglePerDay = 360 / cycleLength;
+
+    return days.map((day, index) => {
+      const angle = (index * anglePerDay - 90) * (Math.PI / 180);
+      const x = 50 + radius * Math.cos(angle);
+      const y = 50 + radius * Math.sin(angle);
+
+      const currentPhase = getCurrentPhase(day);
+      const seeds = seedRecommendations[currentPhase];
+
+      if (!seeds || seeds.length === 0) return null;
+
+      return (
+        <text
+          key={`seed-${day}`}
+          x={x}
+          y={y}
+          fontSize="5"
+          textAnchor="middle"
+          alignmentBaseline="middle"
+        >
+          {seeds.join("")}
+          <title>
+            {currentPhase} Phase Seeds: {seeds.join(" ")}
+          </title>
+        </text>
+      );
+    });
+  };
+
   return (
     <div className="mx-auto aspect-square w-[320px]">
       <svg className="h-full w-full overflow-visible" viewBox="-20 -20 140 140">
-        <circle
-          cx="50"
-          cy="50"
-          r="49"
-          fill="white"
-          stroke="gray"
-          strokeWidth="1"
-        />
         {generateWedges()}
         {generateDayNumbers()}
         {generatePhaseLabels()}
+        {generateSeedIcons()} {/* Add seed icons */}
         {generateClockHand()}
       </svg>
     </div>
@@ -147,6 +174,8 @@ CycleChart.propTypes = {
     })
   ).isRequired,
   cycleLength: PropTypes.number.isRequired,
+  getCurrentPhase: PropTypes.func.isRequired,
+  seedRecommendations: PropTypes.object.isRequired,
 };
 
 export default CycleChart;

@@ -78,6 +78,13 @@ const useMenstrualCycle = (startDate, cycleLength) => {
     }
   };
 
+  const seedRecommendations = {
+    Menstrual: [],
+    Follicular: ["🌾", "🎃"], // Flaxseeds & Pumpkin Seeds
+    Ovulation: ["🌾", "🎃"], // Continue with Follicular seeds
+    Luteal: ["🌿", "🌻"], // Sesame Seeds & Sunflower Seeds
+  };
+
   return {
     currentDayIndex,
     days,
@@ -85,6 +92,7 @@ const useMenstrualCycle = (startDate, cycleLength) => {
     labels,
     getCurrentPhase,
     getPregnancyProbability,
+    seedRecommendations,
   };
 };
 
