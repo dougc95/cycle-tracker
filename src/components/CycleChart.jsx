@@ -79,9 +79,12 @@ const CycleChart = ({
   };
 
   const generatePhaseLabels = () => {
-    const radius = 70;
+    let radius = 70;
 
     return labels.map((label, index) => {
+      if ([1, 3].includes(index)) {
+        radius = 80;
+      }
       const angle = label.angle * (Math.PI / 180);
       const x = 50 + radius * Math.cos(angle);
       const y = 50 + radius * Math.sin(angle);
