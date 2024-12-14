@@ -20,25 +20,6 @@ const InputFields = ({
     setCycleLength(newCycleLength);
   };
 
-  const getPhaseColor = (date) => {
-    const diffInDays = dayjs(date).diff(dayjs(startDate), "day");
-    const currentDay = (diffInDays % cycleLength) + 1;
-    const currentPhase = getCurrentPhase(currentDay);
-
-    switch (currentPhase) {
-      case "Menstrual":
-        return "menstrual.main";
-      case "Follicular":
-        return "follicular.main";
-      case "Ovulation":
-        return "ovulation.main";
-      case "Luteal":
-        return "luteal.main";
-      default:
-        return "grey.300"; // Default color if no phase matches
-    }
-  };
-
   return (
     <Box sx={{ mb: 3 }}>
       <Box sx={{ mb: 2 }}>
@@ -52,28 +33,55 @@ const InputFields = ({
         />
       </Box>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
+        {/* TODO: fix date picker interaction */}
         <DatePicker
           label="Start Date of Bleeding"
           value={dayjs(startDate)}
           onChange={(newValue) => {
-            setStartDate(newValue.format("YYYY-MM-DD"));
+            if (newValue) {
+              setStartDate(newValue.format("YYYY-MM-DD"));
+            }
           }}
           sx={{
             width: "24ch",
             "& .MuiInputBase-input": {
-              padding: "10px 14px", // Adjust padding to match original style
+              padding: "10px 14px",
             },
           }}
-          dayOfWeekFormatter={(_, date) => ({
-            sx: {
-              color: getPhaseColor(date), // Apply phase color to the day of the week
-            },
-          })}
           slotProps={{
-            day: {
-              sx: (ownerState) => ({
-                bgcolor: getPhaseColor(ownerState.date), // Apply phase color to each day
-              }),
+            dayCalendar: {
+              dayOfWeekFormatter: (day) =>
+                typeof day === "string" ? day.charAt(0).toUpperCase() : "",
+            },
+            day: (ownerState) => {
+              const date = ownerState.day.toDate();
+              const diffInDays = Math.floor(
+                (date - new Date(startDate)) / (1000 * 60 * 60 * 24)
+              );
+              const currentDay = (diffInDays % cycleLength) + 1;
+              const currentPhase = getCurrentPhase(currentDay);
+              let phaseColor = "grey.300";
+              switch (currentPhase) {
+                case "Menstrual":
+                  phaseColor = "menstrual.main";
+                  break;
+                case "Follicular":
+                  phaseColor = "follicular.main";
+                  break;
+                case "Ovulation":
+                  phaseColor = "ovulation.main";
+                  break;
+                case "Luteal":
+                  phaseColor = "luteal.main";
+                  break;
+                default:
+                  phaseColor = "grey.300";
+              }
+              return {
+                sx: {
+                  bgcolor: phaseColor,
+                },
+              };
             },
           }}
         />
