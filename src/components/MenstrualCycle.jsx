@@ -1,4 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  Container,
+  Typography,
+  Tabs,
+  Tab,
+  Box,
+  useMediaQuery,
+} from "@mui/material";
 import CycleChart from "./CycleChart";
 import FAQ from "./FAQ/FAQ";
 import Feedback from "./Feedback";
@@ -6,11 +14,10 @@ import InputFields from "./InputFields";
 import PhasePreview from "./PhasePreview";
 import PhaseDescription from "./PhaseDescription";
 import SeedCyclingTab from "./SeedCyclingTab";
-
 import useMenstrualCycle from "../hooks/useMenstrualCycle";
 
 const MenstrualCycle = () => {
-  const [activeTab, setActiveTab] = useState("Home");
+  const [activeTab, setActiveTab] = useState(0);
   const [cycleLength, setCycleLength] = useState(28);
   const [startDate, setStartDate] = useState(() => {
     const today = new Date();
@@ -30,40 +37,82 @@ const MenstrualCycle = () => {
   const currentDay = currentDayIndex !== null ? currentDayIndex + 1 : null;
   const currentPhase = currentDay ? getCurrentPhase(currentDay) : null;
 
-  const tabs = ["Home", "SeedCycling", "FAQ", "Feedback"];
+  const tabs = ["Home", "Seed Cycling", "FAQ", "Feedback"];
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    if (isSmallScreen) {
+      document.body.style.fontSize = "14px";
+    } else {
+      document.body.style.fontSize = "16px";
+    }
+
+    return () => {
+      document.body.style.fontSize = "";
+    };
+  }, [isSmallScreen]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#2e2e2e] p-8">
-      <div className="w-full max-w-2xl">
-        <h1 className="mb-8 text-center text-3xl font-playfair text-[#2f7059]">
-          Couples Cycle Tracker
-        </h1>
+    <Container
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 4,
+      }}
+    >
+      <Typography variant="h1" align="center" mb={4}>
+        Couples Cycle Tracker
+      </Typography>
 
-        {/* Tab Navigation */}
-        <div className="flex justify-center mb-6 flex-wrap">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              className={`px-4 py-2 mx-2 rounded ${
-                activeTab === tab
-                  ? "text-white font-semibold border-b-2 border-white"
-                  : "text-[#2f7059] opacity-75"
-              }`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab === "SeedCycling" ? "Seed Cycling" : tab}
-            </button>
-          ))}
-        </div>
+      <Tabs
+        value={activeTab}
+        onChange={(event, newValue) => setActiveTab(newValue)}
+        centered
+        variant={isSmallScreen ? "scrollable" : "standard"}
+        scrollButtons="auto"
+        sx={{
+          mb: 3,
+          ".Mui-selected": {
+            color: (theme) => theme.palette.primary.main,
+            fontWeight: "bold",
+          },
+        }}
+      >
+        {tabs.map((tab, index) => (
+          <Tab
+            key={index}
+            label={tab === "Seed Cycling" ? "Seed Cycling" : tab}
+            sx={{
+              color: (theme) => theme.palette.text.secondary,
+              "&:hover": {
+                opacity: 0.8,
+              },
+            }}
+          />
+        ))}
+      </Tabs>
 
-        {activeTab === "Home" && (
+      <Box width="100%" maxWidth="md">
+        {activeTab === 0 && (
           <>
-            <div className="flex flex-col md:flex-row">
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                alignItems: "center",
+                gap: 3,
+                mb: 3,
+              }}
+            >
               <InputFields
                 cycleLength={cycleLength}
                 setCycleLength={setCycleLength}
                 startDate={startDate}
                 setStartDate={setStartDate}
+                getCurrentPhase={getCurrentPhase}
               />
               <CycleChart
                 days={days}
@@ -74,8 +123,7 @@ const MenstrualCycle = () => {
                 getCurrentPhase={getCurrentPhase}
                 seedRecommendations={seedRecommendations}
               />
-            </div>
-
+            </Box>
             <PhasePreview
               currentDayIndex={currentDayIndex}
               getPhaseColor={getPhaseColor}
@@ -85,21 +133,24 @@ const MenstrualCycle = () => {
             />
 
             <PhaseDescription currentPhase={currentPhase} />
-            <footer>
-              {/* Disclaimer */}
-              <p className="mt-4 text-center text-xs text-gray-400">
-                Note: The pregnancy probability is an estimation and should not
-                be used for medical advice or contraception. Please consult a
-                healthcare professional for personalized information.
-              </p>
-            </footer>
+            <Typography
+              variant="caption"
+              display="block"
+              align="center"
+              mt={2}
+              color="textSecondary"
+            >
+              Note: The pregnancy probability is an estimation and should not be
+              used for medical advice or contraception. Please consult a
+              healthcare professional for personalized information.
+            </Typography>
           </>
         )}
-        {activeTab === "SeedCycling" && <SeedCyclingTab />}
-        {activeTab === "FAQ" && <FAQ />}
-        {activeTab === "Feedback" && <Feedback />}
-      </div>
-    </div>
+        {activeTab === 1 && <SeedCyclingTab />}
+        {activeTab === 2 && <FAQ />}
+        {activeTab === 3 && <Feedback />}
+      </Box>
+    </Container>
   );
 };
 

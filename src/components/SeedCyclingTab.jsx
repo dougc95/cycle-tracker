@@ -1,34 +1,54 @@
+import { Typography, List, ListItem, Box } from "@mui/material";
+
 const SeedCyclingTab = () => {
   return (
-    <div className="text-white p-6">
-      <h2 className="text-3xl font-playfair mb-4">What is Seed Cycling?</h2>
-      <p className="mb-4 text-base font-open-sans">
+    <Box p={3}>
+      <Typography variant="h2" gutterBottom>
+        What is Seed Cycling?
+      </Typography>
+      <Typography variant="body1" paragraph>
         Seed cycling is a natural approach to balance hormones by consuming
         specific seeds during different phases of the menstrual cycle.
-      </p>
+      </Typography>
 
-      <h3 className="text-2xl font-playfair mb-3">How It Works</h3>
-      <p className="mb-4 text-base font-open-sans">
+      <Typography variant="h3" gutterBottom>
+        How It Works
+      </Typography>
+      <Typography variant="body1" paragraph>
         During the Follicular Phase, consume flaxseeds and pumpkin seeds. In the
         Luteal Phase, switch to sesame and sunflower seeds.
-      </p>
+      </Typography>
 
-      <h3 className="text-2xl font-playfair mb-3">Seed Preparation Tips</h3>
-      <ul className="list-disc list-inside mb-4 text-base font-open-sans">
-        <li>Grind seeds fresh to enhance absorption.</li>
-        <li>Store in a cool, dark place.</li>
-        <li>Add to smoothies, salads, or yogurt.</li>
-      </ul>
+      <Typography variant="h3" gutterBottom>
+        Seed Preparation Tips
+      </Typography>
+      <List>
+        <ListItem sx={{ display: "list-item" }}>
+          Grind seeds fresh to enhance absorption.
+        </ListItem>
+        <ListItem sx={{ display: "list-item" }}>
+          Store in a cool, dark place.
+        </ListItem>
+        <ListItem sx={{ display: "list-item" }}>
+          Add to smoothies, salads, or yogurt.
+        </ListItem>
+      </List>
 
-      <h3 className="text-2xl font-playfair mb-3">Benefits</h3>
-      <ul className="list-disc list-inside mb-4 text-base font-open-sans">
-        <li>Helps regulate hormones.</li>
-        <li>Reduces PMS symptoms.</li>
-        <li>Supports reproductive health.</li>
-      </ul>
+      <Typography variant="h3" gutterBottom>
+        Benefits
+      </Typography>
+      <List>
+        <ListItem sx={{ display: "list-item" }}>
+          Helps regulate hormones.
+        </ListItem>
+        <ListItem sx={{ display: "list-item" }}>Reduces PMS symptoms.</ListItem>
+        <ListItem sx={{ display: "list-item" }}>
+          Supports reproductive health.
+        </ListItem>
+      </List>
 
       {/* Static cycle chart can be added here if desired */}
-    </div>
+    </Box>
   );
 };
 

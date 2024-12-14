@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import PropTypes from "prop-types";
+import { Typography, List, ListItem, Box, useTheme } from "@mui/material";
 
 const phaseDescriptions = {
   Menstrual: {
@@ -56,47 +58,50 @@ const phaseDescriptions = {
 };
 
 const PhaseDescription = ({ currentPhase }) => {
+  const theme = useTheme();
   if (!currentPhase || !phaseDescriptions[currentPhase]) return null;
 
   const { title, hormonalChanges, psychologicalEffects, seedRecommendations } =
     phaseDescriptions[currentPhase];
 
   return (
-    <div className="text-white mt-6">
-      <h2 className="text-2xl font-bold mb-4 font-playfair">{title}</h2>
-      <p className="mb-3 text-base font-open-sans">
+    <Box mt={3}>
+      <Typography variant="h2" gutterBottom>
+        {title}
+      </Typography>
+      <Typography variant="body1" paragraph>
         <strong>Hormonal Changes:</strong> {hormonalChanges}
-      </p>
-      <p className="mb-2 text-lg font-semibold font-open-sans">
+      </Typography>
+      <Typography variant="h3" gutterBottom>
         Psychological Effects:
-      </p>
-      <ul className="list-disc list-inside mb-4 text-base font-open-sans">
+      </Typography>
+      <List>
         {psychologicalEffects.map((effect, index) => (
-          <li key={index} className="mb-1">
-            {effect}
-          </li>
+          <ListItem key={index} sx={{ display: "list-item" }}>
+            <Typography variant="body1">{effect}</Typography>
+          </ListItem>
         ))}
-      </ul>
+      </List>
       {seedRecommendations && seedRecommendations.length > 0 && (
         <>
-          <p className="mb-2 text-lg font-semibold font-open-sans">
+          <Typography variant="h3" gutterBottom>
             Seed Recommendations:
-          </p>
-          <ul className="list-disc list-inside text-base font-open-sans">
+          </Typography>
+          <List>
             {seedRecommendations.map((seed, index) => (
-              <li key={index} className="mb-1">
-                {seed}
-              </li>
+              <ListItem key={index} sx={{ display: "list-item" }}>
+                <Typography variant="body1">{seed}</Typography>
+              </ListItem>
             ))}
-          </ul>
+          </List>
         </>
       )}
-    </div>
+    </Box>
   );
 };
 
 PhaseDescription.propTypes = {
-  currentPhase: PropTypes.string.isRequired,
+  currentPhase: PropTypes.string,
 };
 
 export default PhaseDescription;
