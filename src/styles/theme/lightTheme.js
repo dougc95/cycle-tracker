@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
-import palette from "./palette";
-import fonts from "./fonts";
+import palette from "../palette";
+import fonts from "../fonts";
 
 const lightTheme = createTheme({
   palette: {
