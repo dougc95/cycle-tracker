@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { TextField, Button, Typography, Box } from "@mui/material";
 
 const Feedback = () => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
@@ -6,7 +7,7 @@ const Feedback = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // TODO:Send the feedbackMessage to your server via an API endpoint
+    // TODO: Send the feedbackMessage to your server via an API endpoint
     try {
       const response = await fetch("/api/feedback", {
         method: "POST",
@@ -17,11 +18,9 @@ const Feedback = () => {
       });
 
       if (response.ok) {
-        // Optionally, display a success message or clear the form
         alert("Thank you for your feedback!");
         setFeedbackMessage("");
       } else {
-        // Handle errors
         alert("Something went wrong. Please try again later.");
       }
     } catch (error) {
@@ -31,30 +30,27 @@ const Feedback = () => {
   };
 
   return (
-    <div className="text-white p-6">
-      <h2 className="text-2xl font-playfair mb-4">We Value Your Feedback</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block mb-1" htmlFor="feedbackMessage">
-            Feedback
-          </label>
-          <textarea
-            id="feedbackMessage"
-            value={feedbackMessage}
-            onChange={(e) => setFeedbackMessage(e.target.value)}
-            className="w-full p-2 rounded bg-gray-700 text-white"
-            rows="5"
-            required
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-[#2f7059] text-white rounded hover:bg-[#256d54]"
-        >
+    <Box p={3}>
+      <Typography variant="h2" mb={2}>
+        We Value Your Feedback
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Feedback"
+          multiline
+          rows={5}
+          value={feedbackMessage}
+          onChange={(e) => setFeedbackMessage(e.target.value)}
+          variant="outlined"
+          fullWidth
+          required
+          sx={{ mb: 2 }}
+        />
+        <Button type="submit" variant="contained" color="primary">
           Send Feedback
-        </button>
+        </Button>
       </form>
-    </div>
+    </Box>
   );
 };
 

@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useTheme } from "@mui/material/styles";
 
 const CycleChart = ({
   days,
@@ -9,6 +10,8 @@ const CycleChart = ({
   getCurrentPhase,
   seedRecommendations,
 }) => {
+  const theme = useTheme();
+
   const generateWedges = () => {
     const radius = 50;
     const center = 50;
@@ -26,7 +29,7 @@ const CycleChart = ({
       const y2 = center + radius * Math.sin((Math.PI * endAngle) / 180);
 
       const isCurrentDay = index === currentDayIndex;
-      const colors = getPhaseColor(day, isCurrentDay);
+      const { bg } = getPhaseColor(day, isCurrentDay);
 
       const largeArcFlag = anglePerDay >= 180 ? 1 : 0;
 
@@ -41,8 +44,8 @@ const CycleChart = ({
         <path
           key={`wedge-${day}`}
           d={d}
-          fill={colors.bg}
-          stroke="#ffffff"
+          fill={bg}
+          stroke={theme.palette.background.paper} // Use theme color for stroke
           strokeWidth="0.5"
         />
       );
@@ -59,14 +62,14 @@ const CycleChart = ({
       const y = 50 + radius * Math.sin(angle);
 
       const isCurrentDay = index === currentDayIndex;
-      const colors = getPhaseColor(day, isCurrentDay);
+      const { text } = getPhaseColor(day, isCurrentDay);
 
       return (
         <text
           key={`day-${day}`}
           x={x}
           y={y}
-          fill={colors.text}
+          fill={text}
           fontSize="4"
           fontWeight="bold"
           textAnchor="middle"
@@ -116,12 +119,19 @@ const CycleChart = ({
     const y2 = 50 + 35 * Math.sin((Math.PI * angle) / 180);
 
     return (
-      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="black" strokeWidth="1" />
+      <line
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        stroke={theme.palette.text.primary} // Use theme color for stroke
+        strokeWidth="1"
+      />
     );
   };
 
   const generateSeedIcons = () => {
-    const radius = 60; // Slightly larger radius to place icons outside the wedges
+    const radius = 60;
     const anglePerDay = 360 / cycleLength;
 
     return days.map((day, index) => {
@@ -153,12 +163,23 @@ const CycleChart = ({
   };
 
   return (
-    <div className="mx-auto aspect-square w-[320px]">
-      <svg className="h-full w-full overflow-visible" viewBox="-20 -20 140 140">
+    <div
+      style={{
+        width: "320px",
+        height: "320px",
+        margin: "0 auto",
+      }}
+    >
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="-20 -20 140 140"
+        style={{ overflow: "visible" }}
+      >
         {generateWedges()}
         {generateDayNumbers()}
         {generatePhaseLabels()}
-        {generateSeedIcons()} {/* Add seed icons */}
+        {generateSeedIcons()}
         {generateClockHand()}
       </svg>
     </div>
