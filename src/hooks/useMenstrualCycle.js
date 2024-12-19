@@ -1,16 +1,15 @@
 import { useMemo } from "react";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 const useMenstrualCycle = (startDate, cycleLength) => {
   const currentDayIndex = useMemo(() => {
-    const calculateCurrentDayIndex = () => {
-      const start = new Date(startDate);
-      const now = new Date();
-      const diffInDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-      const index = diffInDays % cycleLength;
-      return index >= 0 ? index : cycleLength + index;
-    };
-
-    return startDate ? calculateCurrentDayIndex() : null;
+    if (!startDate) return null;
+    const parsedStart = dayjs(startDate, "DD-MM-YYYY");
+    const diffInDays = dayjs().diff(parsedStart, "day");
+    const index = diffInDays % cycleLength;
+    return index >= 0 ? index : cycleLength + index;
   }, [startDate, cycleLength]);
 
   const days = Array.from({ length: cycleLength }, (_, i) => i + 1);

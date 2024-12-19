@@ -15,13 +15,15 @@ import PhasePreview from "./PhasePreview";
 import PhaseDescription from "./PhaseDescription";
 import SeedCyclingTab from "./SeedCyclingTab";
 import useMenstrualCycle from "../hooks/useMenstrualCycle";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 const MenstrualCycle = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [cycleLength, setCycleLength] = useState(28);
   const [startDate, setStartDate] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split("T")[0];
+    return dayjs().format("DD-MM-YYYY");
   });
 
   const {
