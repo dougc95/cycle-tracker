@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ThemeProvider, CssBaseline, useMediaQuery } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
+import { Analytics } from "@vercel/analytics/react";
 import MenstrualCycle from "./components/MenstrualCycle";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -41,6 +42,7 @@ function App() {
         </ToggleButton>
       </ToggleButtonGroup>
       <MenstrualCycle />
+      <Analytics />
     </ThemeProvider>
   );
 }
